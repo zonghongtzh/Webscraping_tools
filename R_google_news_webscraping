@@ -1,0 +1,30 @@
+collecting_urls <- function(search_list,from_date_list,to_date_list,number_of_results) {
+  url_list <- c()
+  library("httr")
+  library("RCurl")
+  library("rvest")
+  library("XML")
+  options(HTTPUserAgent="Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36")
+  for (i in 1:length(search)) {
+    search = search_list[i]
+    for (j in 1:length(from_date_list)) {
+      search <- (gsub('&', '%26', search))
+      search <- (gsub(' ', '+', search))
+      from_date <- from_date_list[j]
+      to_date <- to_date_list[j]
+      search_item <-paste("https://www.google.com/search?q=", search, "&num=", toString(number_of_results), "&tbs=cdr:1,cd_min:", from_date, ",cd_max:", to_date, "&tbm=nws",sep = "")
+      google_page <- read_html(search_item)
+      google_news <- html_nodes(google_page,".r a")
+      for (k in 1:number_of_results) {
+        tryCatch({
+          news_url <- str_sub(html_attr(google_news[[k]], "href"))
+          url_list <- append(url_list,news_url)
+        },
+        error = function(e){
+          NULL
+        })
+      }
+    }
+  }
+  return(url_list)
+}
