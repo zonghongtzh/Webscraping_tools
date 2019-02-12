@@ -1,3 +1,8 @@
+from_date_list = '2/1/2019'
+to_date_list = '2/8/2019'
+search_list <- c('S&P 500')
+number_of_results = 100
+
 collecting_urls <- function(search_list,from_date_list,to_date_list,number_of_results) {
   url_list <- c()
   library("httr")
